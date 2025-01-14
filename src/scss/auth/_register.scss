@@ -1,0 +1,25 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+@use 'sass:color';
+
+.register {
+    margin-top: 5rem;
+    
+    .logo {
+        @include m.gradienText(v.$senary_color, v.$senary_color);
+    }
+
+    input[type="submit"] {
+        margin: 0 auto;
+        display: block;
+        border-radius: 1rem;
+        @include m.button(v.$senary_color, v.$white);
+    }
+
+    .actions {
+        a{
+            color: v.$senary_color;
+        }
+    }
+
+}

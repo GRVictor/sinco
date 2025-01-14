@@ -1,0 +1,29 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+@use 'sass:color';
+
+.form {
+    margin-top: 2.5rem;
+    .field {
+        display: grid;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        label {
+            flex: 0 0 10rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+    
+        input {
+            flex: 1;
+            padding: 1rem;
+            border: 3px solid color.adjust(v.$black, $lightness: 50%);
+            border-radius: 1rem;
+            background-color: color.adjust(v.$grey, $lightness: 50%);
+            color: v.$black;
+            text-align: center;
+        }::placeholder {
+            color: v.$grey;
+        }
+    }
+}
