@@ -16,7 +16,7 @@ class ActiveRecord {
     }
 
     public static function setAlert($type, $message) {
-        static::$alerts[$tipo][] = $menssage;
+        static::$alerts[$type][] = $menssage;
     }
     // Validación
     public static function getAlerts() {
@@ -56,7 +56,7 @@ class ActiveRecord {
 
     // Obtener Registro
     public static function get($limit) {
-        $query = "SELECT * FROM " . static::$table . " LIMIT ${limite}";
+        $query = "SELECT * FROM " . static::$table . " LIMIT ${limit}";
         $result = self::querySQL($query);
         return array_shift( $result ) ;
     }
@@ -74,7 +74,7 @@ class ActiveRecord {
         $result = self::querySQL($query);
         return $result;
     }
-
+ 
     // crea un nuevo registro
     public function create() {
         // Sanitizar los datos
@@ -96,7 +96,7 @@ class ActiveRecord {
         ];
     }
 
-    public function actualizar() {
+    public function update() {
         // Sanitizar los datos
         $attributes = $this->sanitizeAttributes();
 
@@ -152,8 +152,6 @@ class ActiveRecord {
 
         return $objet;
     }
-
-
 
     // Identificar y unir los atributos de la BD
     public function attributes() {
