@@ -1,0 +1,20 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+@use 'sass:color';
+
+.confirm {
+    margin-top: 5rem;
+    
+    .logo {
+        @include m.gradienText(v.$success_color, v.$success_color);
+    }
+    
+    .actions {
+        justify-content: center;
+        a{
+            display: flex;
+            color: v.$success_color;
+        }
+    }
+
+}

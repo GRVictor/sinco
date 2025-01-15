@@ -1,0 +1,17 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+@use 'sass:color';
+
+.message {
+    margin-top: 5rem;
+    
+    .logo {
+        @include m.gradienText(v.$success_color, v.$success_color);
+    }
+    
+    .page-description {
+        color: v.$success_color;
+        font-size: 3rem;
+    }
+
+}

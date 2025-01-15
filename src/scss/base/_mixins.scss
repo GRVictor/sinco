@@ -54,6 +54,10 @@
     background-clip: text;
     font-size: 7rem;
     text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
     @include tablet {
         font-size: 20rem;

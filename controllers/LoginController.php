@@ -13,7 +13,7 @@ class LoginController {
 
         // View Render
         $router -> render('auth/login', [
-            'title' => 'Login'
+            'title' => 'Iniciar Sesión'
         ]);
 
     }
@@ -58,12 +58,20 @@ class LoginController {
         ]);
     }
 
-    public static function message() {
-        echo "Message";
+    public static function message(Router $router) {
+        
+        // View Render
+        $router -> render('auth/message', [
+            'title' => 'Mensaje'
+        ]);
     }
 
-    public static function confirm() {
-        echo "Confirm";
+    public static function confirm(Router $router) {
+        
+        // View Render
+        $router -> render('auth/confirm', [
+            'title' => 'Confirmar Cuenta'
+        ]);
     }
 
 }
