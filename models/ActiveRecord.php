@@ -5,7 +5,7 @@ class ActiveRecord {
     // Base DE DATOS
     protected static $db;
     protected static $table = '';
-    protected static $columnsDB = [];
+    protected static $columns = [];
 
     // Alertas y Mensajes
     protected static $alerts = [];
@@ -156,7 +156,7 @@ class ActiveRecord {
     // Identificar y unir los atributos de la BD
     public function attributes() {
         $attributes = [];
-        foreach(static::$columnsDB as $column) {
+        foreach(static::$columns as $column) {
             if($column === 'id') continue;
             $attributes[$column] = $this->$column;
         }

@@ -7,7 +7,7 @@
         <form action="/register" class="form" method="POST">
             <div class="field">
                 <label for="name">Nombre</label>
-                <input type="text" name="name" id="name" placeholder="Tu Nombre">
+                <input type="text" name="name" id="name" placeholder="Tu Nombre" value="<?php echo $user->name; ?>">
             </div>
             <div class="field">
                 <label for="email">Email</label>
