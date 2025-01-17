@@ -11,25 +11,34 @@ class User extends ActiveRecord {
         $this -> name = $args['name'] ?? '';
         $this -> email = $args['email'] ?? '';
         $this -> password = $args['password'] ?? '';
+        $this -> confirm = $args['confirm'] ?? '';
         $this -> token = $args['token'] ?? '';
         $this -> confirmed = $args['confirmed'] ?? 0;
     }
 
     public function validateAccount() {
         if (!$this -> name) {
-            self::$alerts[] = 'Debes añadir un nombre';
+            self::$alerts['error'][] = 'Debes ingresar tu nombre';
         }
 
         if (!$this -> email) {
-            self::$alerts[] = 'Debes añadir un email';
-        }
-
-        if (!$this -> password) {
-            self::$alerts[] = 'Debes añadir una contraseña';
+            self::$alerts['error'][] = 'Debes ingresar tu email';
         }
 
         if (!filter_var($this -> email, FILTER_VALIDATE_EMAIL)) {
-            self::$alerts[] = 'Email no válido';
+            self::$alerts['error'][] = 'Debes ingresar un email válido';
+        }
+
+        if (!$this -> password) {
+            self::$alerts['error'][] = 'Debes ingresar tu contraseña';
+        }
+
+        if (strlen($this -> password) < 8) {
+            self::$alerts['error'][] = 'La contraseña debe tener al menos 8 caracteres';
+        }
+
+        if ($this -> password !== $this -> confirm) {
+            self::$alerts['error'][] = 'Las contraseñas no coinciden';
         }
 
         return self::$alerts;

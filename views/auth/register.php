@@ -4,6 +4,9 @@
 
     <div class="container-sm">
         <p class="page-description">Crea tu cuenta</p>
+
+        <?php include_once __DIR__ . '/../templates/alerts.php'; ?>
+        
         <form action="/register" class="form" method="POST">
             <div class="field">
                 <label for="name">Nombre</label>
@@ -11,7 +14,7 @@
             </div>
             <div class="field">
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email" placeholder="Tu Email">
+                <input type="email" name="email" id="email" placeholder="Tu Email" value="<?php echo $user->email; ?>">
             </div>
             <div class="field">
                 <label for="password">Contraseña</label>

@@ -1,0 +1,23 @@
+@use 'base/variables' as v;
+@use 'sass:color';
+.alert {
+  padding: 1rem 1rem 1rem 2rem;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  max-width: 80rem;
+  text-align: center;
+
+    &.success {
+        background-color: color.adjust(v.$success_color, $lightness: 30%);
+        border-left: 0.5rem solid v.$success_color;
+        color: v.$white;
+    }
+
+    &.error {
+        background-color: color.adjust(v.$alert_color, $lightness: 30%);
+        border-left: 0.5rem solid v.$alert_color;
+        color: v.$white;
+    }
+}
