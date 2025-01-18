@@ -14,4 +14,11 @@
         font-size: 3rem;
     }
 
+    .actions {
+        justify-content: center;
+        a{
+            color: v.$success_color;
+        }
+    }
+
 }

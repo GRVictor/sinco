@@ -10,9 +10,9 @@
   text-align: center;
 
     &.success {
-        background-color: color.adjust(v.$success_color, $lightness: 30%);
-        border-left: 0.5rem solid v.$success_color;
-        color: v.$white;
+        background-color: color.adjust(v.$success_color, $lightness: 5%);
+        border-left: 0.5rem solid color.adjust(v.$success_color, $lightness: -20%);
+        color: v.$black;
     }
 
     &.error {

@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Classes\Email;
 use MVC\Router;
 use Model\User;
 
@@ -34,6 +35,36 @@ class LoginController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user->sync($_POST);
             $alerts = $user->validateAccount();
+            
+            if (!empty($alerts)) {
+                $userExists = User::where('email', $user->email);
+
+                if ($userExists) {
+                    User::setAlert('error', 'El email ya está registrado');
+                    $alerts = User::getAlerts();
+                } else {
+                    // Hash password and generate token
+                    $user->hashPassword();
+
+                    // Delete confirm from the user object
+                    unset($user->confirm);
+
+                    // Generate token
+                    $user->generateToken();
+
+                    // Send email
+                    $email = new Email($user->name, $user->email, $user->token);
+                    $email->sendEmail();
+
+                    // Save user in the database
+                    $result = $user->save();
+
+                    if($result) {
+                        header('Location: /message');
+                    }
+                }
+            }
+
         }
 
         // View Render
@@ -86,8 +117,33 @@ class LoginController {
     }
 
     public static function confirm(Router $router) {
+
         
+        $token = s($_GET['token']);
         $alerts = [];
+        
+        if (!$token) {
+            header('Location: /');
+        }
+
+        // FInd user by token
+        $user = User::where('token', $token);
+
+        if (empty($user)) {
+            // Token not valid
+            User::setAlert('error', 'Token no válido');
+        } else {
+            // Confirm account
+            $user->confirmed = 1;
+            $user->token = "";
+            unset($user->confirm);
+
+            $result = $user->save();
+
+            User::setAlert('success', 'Cuenta confirmada');
+        }
+
+        $alerts = User::getAlerts();
 
         // View Render
         $router -> render('auth/confirm', [

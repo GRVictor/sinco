@@ -5,6 +5,7 @@ namespace Model;
 class User extends ActiveRecord {
     protected static $table = 'users';
     protected static $columns = ['id', 'name', 'email', 'password', 'token', 'confirmed'];
+    protected static $alerts = ['error' => [], 'success' => []];
 
     public function __construct($args = []) {
         $this -> id = $args['id'] ?? null;
@@ -42,5 +43,23 @@ class User extends ActiveRecord {
         }
 
         return self::$alerts;
+    }
+
+    // Hashear el password
+    public function hashPassword() {
+        $this -> password = password_hash($this -> password, PASSWORD_BCRYPT);
+    }
+
+    // Generar token
+    public function generateToken() {
+        $this -> token = bin2hex(random_bytes(20));
+    }
+
+    public static function getAlerts() {
+        return self::$alerts;
+    }
+
+    public static function setAlert($type, $message) {
+        self::$alerts[$type][] = $message;
     }
 }
