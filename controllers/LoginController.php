@@ -36,7 +36,7 @@ class LoginController {
             $user->sync($_POST);
             $alerts = $user->validateAccount();
             
-            if (!empty($alerts)) {
+            if (empty($alerts['error'])) {
                 $userExists = User::where('email', $user->email);
 
                 if ($userExists) {
@@ -64,7 +64,6 @@ class LoginController {
                     }
                 }
             }
-
         }
 
         // View Render
@@ -80,7 +79,33 @@ class LoginController {
         $alerts = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Lógica para manejar el formulario de olvido de contraseña y llenar $alerts si hay errores
+            $user = new User($_POST);
+            $alerts = $user->validateEmail();
+
+            if(empty($alerts['error'])) {
+                $user = User::where('email', $user->email);
+
+                if ($user && $user->confirmed) {
+                    // User exists and is confirmed, we first generate a token
+                    $user->generateToken();
+                    unset($user->confirm);
+
+                    // Save user in the database
+                    $user->save();
+
+                    // Send email
+                    $email = new Email($user->email, $user->name, $user->token);
+                    $email->sendPasswordReset();
+
+                    // Set success alert
+                    User::setAlert('success', 'Te hemos enviado un correo para restablecer tu contraseña');
+                    
+                } else {
+                    User::setAlert('error', 'El email no está registrado o la cuenta no está confirmada');
+                }
+            }
+
+            $alerts = User::getAlerts();
         }
 
         // View Render
@@ -93,15 +118,51 @@ class LoginController {
     public static function reset(Router $router) {
 
         $alerts = [];
+        $token = s($_GET['token']);
+        $showForm = true;
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Lógica para manejar el formulario de restablecimiento de contraseña y llenar $alerts si hay errores
+        if (!$token) {
+            header('Location: /');
         }
+
+        // Find user by token
+        $user = User::where('token', $token);
+
+        if(empty($user)) {
+            User::setAlert('error', 'Token no válido');
+            $showForm = false;
+        } else {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Add new password
+                $user->sync($_POST);
+                $alerts = $user->validatePassword();
+
+                if (empty($alerts['error'])) {
+                    // Hash password
+                    $user->hashPassword();
+                    unset($user->confirm);
+
+                    // Reset token
+                    $user->token = "";
+
+                    // Save user in the database
+                    $result = $user->save();
+
+                    if ($result) {
+                        User::setAlert('success', 'Contraseña actualizada');
+                        $showForm = false;
+                    }
+                }
+            }
+        }
+        
+        $alerts = User::getAlerts();
 
         // View Render
         $router -> render('auth/reset', [
             'title' => 'Restablecer Contraseña',
-            'alerts' => $alerts
+            'alerts' => $alerts,
+            'showForm' => $showForm
         ]);
     }
 
@@ -126,7 +187,7 @@ class LoginController {
             header('Location: /');
         }
 
-        // FInd user by token
+        // Find user by token
         $user = User::where('token', $token);
 
         if (empty($user)) {

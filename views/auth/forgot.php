@@ -4,7 +4,10 @@
 
     <div class="container-sm">
         <p class="page-description">Olvidé mi contraseña</p>
-        <form action="/" class="form" method="POST">
+
+        <?php include_once __DIR__ . '/../templates/alerts.php'; ?>
+
+        <form action="/forgot" class="form" method="POST">
 
             <div class="field">
                 <label for="email">Ingresa tu correo</label>

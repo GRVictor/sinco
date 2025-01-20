@@ -12,7 +12,7 @@ class User extends ActiveRecord {
         $this -> name = $args['name'] ?? '';
         $this -> email = $args['email'] ?? '';
         $this -> password = $args['password'] ?? '';
-        $this -> confirm = $args['confirm'] ?? '';
+        $this -> confirm = $args['confirm'] ?? ''; // It is part of the constructor but it is not part of the data we save in the database
         $this -> token = $args['token'] ?? '';
         $this -> confirmed = $args['confirmed'] ?? 0;
     }
@@ -30,6 +30,33 @@ class User extends ActiveRecord {
             self::$alerts['error'][] = 'Debes ingresar un email válido';
         }
 
+        if (!$this -> password) {
+            self::$alerts['error'][] = 'Debes ingresar tu contraseña';
+        }
+
+        if (strlen($this -> password) < 8) {
+            self::$alerts['error'][] = 'La contraseña debe tener al menos 8 caracteres';
+        }
+
+        if ($this -> password !== $this -> confirm) {
+            self::$alerts['error'][] = 'Las contraseñas no coinciden';
+        }
+
+        return self::$alerts;
+    }
+
+    public function validateEmail() {
+        
+        if (!$this -> email) {
+            self::$alerts['error'][] = 'Debes ingresar tu email';
+        } else if (!filter_var($this -> email, FILTER_VALIDATE_EMAIL)) {
+            self::$alerts['error'][] = 'Debes ingresar un email válido';
+        }
+
+        return self::$alerts;
+    }
+
+    public function validatePassword() {
         if (!$this -> password) {
             self::$alerts['error'][] = 'Debes ingresar tu contraseña';
         }

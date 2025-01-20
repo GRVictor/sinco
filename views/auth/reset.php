@@ -4,7 +4,12 @@
 
     <div class="container-sm">
         <p class="page-description">Restablece tu Contraseña</p>
-        <form action="/" class="form" method="POST">
+
+        <?php include_once __DIR__ . '/../templates/alerts.php'; ?>
+
+        <?php if ($showForm) : ?>
+
+        <form class="form" method="POST">
 
             <div class="field">
                 <label for="password">Nueva Contraseña</label>
@@ -17,6 +22,8 @@
 
             <input type="submit" class="button button-primary" value="Restablecer">
         </form>
+
+        <?php endif; ?>
 
         <div class="actions">
             <a href="/" class="link">Iniciar Sesión</a>
