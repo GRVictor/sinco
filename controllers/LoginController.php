@@ -12,9 +12,42 @@ class LoginController {
         $alerts = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Lógica para manejar el inicio de sesión y llenar $alerts si hay errores
+            $user = new User($_POST);
+            $alerts = $user->validateLogin();
+            
+            if(empty($alerts['error'])) {
+                // If the user exists
+                $user = User::where('email', $user->email);
+
+                if(!$user) {
+                    User::setAlert('error', 'El usuario no existe');
+                } elseif (!$user->confirmed) {
+                    User::setAlert('error', 'La cuenta no está confirmada');
+                } else {
+                    // The user exists and is confirmed
+                    if (password_verify($_POST['password'], $user->password)) {
+                        // Start session
+                        session_start();
+
+                        // Set session variables
+                        $_SESSION['id'] = $user->id;
+                        $_SESSION['name'] = $user->name;
+                        $_SESSION['email'] = $user->email;
+                        $_SESSION['login'] = true;
+
+                        // Redirect
+                        header('Location: /dashboard');
+                    } else {
+                        User::setAlert('error', 'La contraseña es incorrecta');
+                    }
+                }
+
+            }   
+
         }
 
+
+        $alerts = User::getAlerts();
         // View Render
         $router -> render('auth/login', [
             'title' => 'Iniciar Sesión',
@@ -24,7 +57,11 @@ class LoginController {
     }
 
     public static function logout() {
-        echo "Logout";
+        session_start();
+        $_SESSION = [];
+
+        header('Location: /');
+
     }
 
     public static function register(Router $router) {

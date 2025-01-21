@@ -1,0 +1,39 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+@use 'sass:color';
+
+.sidebar {
+    background-color: v.$primary_color;
+    padding: 2rem;
+    h2 {
+        color: v.$white;
+        margin: 0;
+        text-align: center;   
+        font-size: 8rem;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .sidebar-nav {
+        margin-top: 5rem;
+        a {
+            text-transform: uppercase;
+            color: v.$white;
+            display: block;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            padding: 1rem;
+            transition-property: background-color, border-radius;
+            transition-duration: 200ms;
+
+            &:hover,
+            &.active {
+                background-color: color.adjust(v.$primary_color, $lightness: -20%);
+                border-radius: 0.7rem;
+            }
+        }
+    }
+
+}

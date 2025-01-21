@@ -17,6 +17,20 @@ class User extends ActiveRecord {
         $this -> confirmed = $args['confirmed'] ?? 0;
     }
 
+    public function validateLogin() {
+        if (!$this -> email) {
+            self::$alerts['error'][] = 'Debes ingresar tu email';
+        } else if (!filter_var($this -> email, FILTER_VALIDATE_EMAIL)) {
+            self::$alerts['error'][] = 'Debes ingresar un email válido';
+        }
+
+        if (!$this -> password) {
+            self::$alerts['error'][] = 'Debes ingresar tu contraseña';
+        }
+
+        return self::$alerts;
+    }
+
     public function validateAccount() {
         if (!$this -> name) {
             self::$alerts['error'][] = 'Debes ingresar tu nombre';

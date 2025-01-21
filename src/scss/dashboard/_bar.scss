@@ -1,0 +1,32 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.bar {
+    background-color: v.$white;
+    padding: 1rem 2rem;
+    
+    @include m.tablet {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    p {
+        margin: 0;
+        font-size: 1.6rem;
+        
+        span {
+            font-weight: 800;
+            color: v.$primary_color;
+            text-decoration: underline;
+        }
+    }
+
+    .logout {
+        @include m.button(v.$quinary_color, v.$white);
+        & {
+            padding: 1rem; // Envolver la declaración en & {}
+        }
+    }
+
+}
