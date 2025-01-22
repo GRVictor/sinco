@@ -2,7 +2,7 @@
 @use 'base/mixins' as m;
 
 .dashboard {
-    background: linear-gradient(to bottom, v.$white, v.$light_grey);
+    background-color: v.$white;
 
     @include m.tablet {
         display: flex;
@@ -19,6 +19,22 @@
             font-size: 3rem;
             text-align: center;
         }
+    }
+
+    .form {
+        input:not([type='submit']) {
+            background-color: v.$white;
+            border: 3px solid v.$light_grey;
+        }
+        input[type='submit'] {
+            @include m.button(v.$primary_color, v.$white);
+            & {
+                padding: 1.2rem;
+                display: block;
+                margin: 0 auto;
+            }
+        }
+
     }
 
 }

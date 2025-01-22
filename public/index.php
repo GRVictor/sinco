@@ -28,9 +28,11 @@ $router->post('/reset', [LoginController::class, 'reset']);
 $router->get('/message', [LoginController::class, 'message']);
 $router->get('/confirm', [LoginController::class, 'confirm']);
 
-// Dashboard
+// Dashboard - Projects zone
 $router->get('/dashboard', [DashboardController::class, 'index']);
 $router->get('/new-project', [DashboardController::class, 'newProject']);
+$router->post('/new-project', [DashboardController::class, 'newProject']);
+$router->get('/project', [DashboardController::class, 'project']);
 $router->get('/profile', [DashboardController::class, 'profile']);
 
 
