@@ -3,8 +3,8 @@
 @use 'sass:color';
 
 .no-projects {
+    text-align: center;
     a {
-        text-align: center;
         color: v.$primary-color;
     }
 }
