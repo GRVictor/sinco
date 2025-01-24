@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../includes/app.php';
 
+use Controllers\TaskController;
 use Controllers\DashboardController;
 use Controllers\LoginController;
 use MVC\Router;
@@ -34,6 +35,13 @@ $router->get('/new-project', [DashboardController::class, 'newProject']);
 $router->post('/new-project', [DashboardController::class, 'newProject']);
 $router->get('/project', [DashboardController::class, 'project']);
 $router->get('/profile', [DashboardController::class, 'profile']);
+
+// Task API
+$router->get('/api/tasks', [TaskController::class, 'index']);
+$router->post('/api/tasks', [TaskController::class, 'create']);
+$router->post('/api/tasks/update', [TaskController::class, 'update']);
+$router->post('/api/tasks/delete', [TaskController::class, 'delete']);
+
 
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
