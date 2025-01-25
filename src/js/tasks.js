@@ -1,7 +1,49 @@
 (function() {
+    getTasks();
+
     // Button to show modal form for adding a new task
     const addTaskButton = document.querySelector('#add-task');
     addTaskButton.addEventListener('click', showForm);
+
+    async function getTasks() {
+        try {
+            const id = getProject();
+            const url = `/api/tasks?url=${id}`;
+            const response = await fetch(url);
+            const result = await response.json();
+            const { tasks } = result;
+            
+            showTasks(tasks);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function showTasks(tasks) {
+        // Text if there are no tasks
+        if(tasks.length === 0) {
+            const tasksContainer = document.querySelector('#task-list');
+            const noTaskText = document.createElement('LI');
+            noTaskText.textContent = 'No hay tareas en este proyecto';
+            noTaskText.classList.add('no-tasks');
+
+            tasksContainer.appendChild(noTaskText);
+            return;
+        }
+
+        tasks.forEach(task => {
+            const tasksContainer = document.createElement('LI');
+            tasksContainer.dataset.taskId = task.id;
+            tasksContainer.classList.add('task');
+
+            const taskName = document.createElement('P');
+            taskName.textContent = task.name;
+
+            console.log(taskName);
+        });
+
+    }
 
     function showForm() {
         const modal = document.createElement('DIV');
