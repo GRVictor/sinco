@@ -28,7 +28,7 @@
             noTaskText.textContent = 'No hay tareas en este proyecto';
             noTaskText.classList.add('no-tasks');
 
-            tasksContainer.appendChild(noTaskText);
+            tasksContainer.appendChild(noTaskText); 
             return;
         }
 
@@ -39,6 +39,14 @@
 
             const taskName = document.createElement('P');
             taskName.textContent = task.name;
+
+            const divOptions = document.createElement('DIV');
+            divOptions.classList.add('options');
+
+            // Buttons
+            const StatusTaskBtn = document.createElement('BUTTON');
+            StatusTaskBtn.classList.add('status-task');
+            StatusTaskBtn.textContent = task.status;
 
             console.log(taskName);
         });
