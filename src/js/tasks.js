@@ -46,7 +46,7 @@
             // Buttons
             const StatusTaskBtn = document.createElement('BUTTON');
             StatusTaskBtn.classList.add('status-task');
-            StatusTaskBtn.textContent = task.status;
+            StatusTaskBtn.textContent = task.status; 
 
             console.log(taskName);
         });
