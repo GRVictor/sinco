@@ -6,6 +6,11 @@ class Project extends ActiveRecord {
     protected static $table = 'projects';
     protected static $columns = ['id', 'project', 'url', 'ownerId'];
 
+    public $id;
+    public $project;
+    public $url;
+    public $ownerId;
+
     public function __construct($args = []) {
         $this -> id = $args['id'] ?? null;
         $this -> project = $args['project'] ?? '';

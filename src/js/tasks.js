@@ -1,6 +1,8 @@
 (function() {
     getTasks();
 
+    let tasks = [];
+
     // Button to show modal form for adding a new task
     const addTaskButton = document.querySelector('#add-task');
     addTaskButton.addEventListener('click', showForm);
@@ -11,16 +13,18 @@
             const url = `/api/tasks?url=${id}`;
             const response = await fetch(url);
             const result = await response.json();
-            const { tasks } = result;
             
-            showTasks(tasks);
+            tasks = result.tasks;
+            showTasks();
 
         } catch (error) {
             console.log(error);
         }
     }
 
-    function showTasks(tasks) {
+    function showTasks() {
+        // Clear the previous tasks
+        clearTasks();
         // Text if there are no tasks
         if(tasks.length === 0) {
             const tasksContainer = document.querySelector('#task-list');
@@ -31,6 +35,11 @@
             tasksContainer.appendChild(noTaskText); 
             return;
         }
+
+        const status = {
+            0: 'Pendiente',
+            1: 'Completada'
+        };
 
         tasks.forEach(task => {
             const tasksContainer = document.createElement('LI');
@@ -46,9 +55,28 @@
             // Buttons
             const StatusTaskBtn = document.createElement('BUTTON');
             StatusTaskBtn.classList.add('status-task');
-            StatusTaskBtn.textContent = task.status; 
+            StatusTaskBtn.classList.add(`${status[task.status].toLowerCase()}`);
+            StatusTaskBtn.textContent = status[task.status];
+            StatusTaskBtn.dataset.status = task.status;
+            StatusTaskBtn.ondblclick = function() {
+                changeStatusTask({...task});
+            }
+            
 
-            console.log(taskName);
+            const DeleteTaskBtn = document.createElement('BUTTON');
+            DeleteTaskBtn.classList.add('delete-task');
+            DeleteTaskBtn.dataset.taskId = task.id;
+            DeleteTaskBtn.textContent = 'Eliminar';
+
+            divOptions.appendChild(StatusTaskBtn);
+            divOptions.appendChild(DeleteTaskBtn);
+
+            tasksContainer.appendChild(taskName);
+            tasksContainer.appendChild(divOptions);
+
+            const tasksList = document.querySelector('#task-list');
+            tasksList.appendChild(tasksContainer);
+
         });
 
     }
@@ -153,7 +181,19 @@
                 const modal = document.querySelector('.modal');
                 setTimeout(() => {
                     modal.remove();
-                }, 2500);
+                }, 1200);
+
+                // Add object to the global array of tasks
+                const taskObj = {
+                    id: String(result.task.id),
+                    name: task,
+                    status: 0,
+                    projectId: result.task.projectId
+                }
+
+                tasks = [...tasks, taskObj];
+                showTasks();
+
             }
 
         } catch (error) {
@@ -161,11 +201,65 @@
         }
     }
 
+    function changeStatusTask(task) {
+        const newStatus = task.status === 1 ? 0 : 1;
+        task.status = newStatus;
+        updateTask(task);
+    }
+
+    async function updateTask(task) {
+
+        const {id, name, status, projectId} = task;
+        const data = new FormData();
+        data.append('id', id);
+        data.append('name', name);
+        data.append('status', status);
+        data.append('projectId', projectId);
+        data.append('url', getProject());
+
+        // for(let value of data.values()) {
+        //     console.log(value);
+        // }
+
+        try {
+            const url = 'http://localhost:3000/api/tasks/update';
+
+            const response = await fetch(url, {
+                method: 'POST',
+                body: data
+            });
+            const result = await response.json();
+            
+            if(result.response.type === 'success') {
+                showAlert(result.response.message, result.response.type, document.querySelector('.container-new-task'));
+
+                tasks = tasks.map(taskMemory => {
+                    if(taskMemory.id === id) {
+                        taskMemory.status = status;
+                    } 
+                    return taskMemory;
+                });
+                showTasks();
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     function getProject() {
-    const project = Object.fromEntries(
-        new URLSearchParams(window.location.search)
-    );
-    return project.url;
-}
+        const project = Object.fromEntries(
+            new URLSearchParams(window.location.search)
+        );
+        return project.url;
+    }
+
+    function clearTasks() {
+        const tasksList = document.querySelector('#task-list');
+        while(tasksList.firstChild) {
+            tasksList.removeChild(tasksList.firstChild);
+        }
+    }
 
 })();

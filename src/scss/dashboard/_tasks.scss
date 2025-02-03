@@ -1,5 +1,6 @@
  @use 'base/variables' as v;
  @use 'base/mixins' as m;
+ @use 'sass:color';
 
  .container-new-task {
     display: flex;
@@ -7,4 +8,81 @@
     .add-task {
         @include m.button(v.$secondary-color, v.$white);
     }
+ }
+
+ .task-list{
+    list-style: none;
+    padding: 0;
+    margin-top: 3rem;
+
+    .no-tasks {
+        text-align: center;
+        font-weight: 650;   
+    }
+
+ }
+
+ .task {
+    padding: 0.5rem 2rem;
+    border-bottom: 2px solid v.$light-grey;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+
+    p {
+        font-size: 1.8rem;
+
+    }
+    
+    .options {
+        display: flex;
+        gap: 1rem;
+
+        button {
+            border: none;
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 0.5rem;
+
+            &:hover{
+                cursor: pointer;
+            }
+
+        }
+        .completada{
+            background-color: v.$success_color;
+            color: v.$white;
+
+            &:hover{
+                background-color: color.adjust(v.$success_color, $lightness: -10%);
+            }
+
+        }
+        .pendiente{
+            background-color: v.$septenary_color; 
+            color: v.$white;
+
+            &:hover{
+                background-color: color.adjust(v.$septenary_color, $lightness: -10%);
+            }
+        }
+        .delete-task{
+            background-color: v.$alert_color;
+            color: v.$white;
+
+            &:hover{
+                background-color: color.adjust(v.$alert_color, $lightness: -10%);
+            }
+
+        }
+
+    }
+
  }

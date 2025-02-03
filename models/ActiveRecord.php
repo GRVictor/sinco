@@ -49,28 +49,28 @@ class ActiveRecord {
 
     // Busca un registro por su id
     public static function find($id) {
-        $query = "SELECT * FROM " . static::$table  ." WHERE id = ${id}";
+        $query = "SELECT * FROM " . static::$table  ." WHERE id = {$id}";
         $result = self::querySQL($query);
         return array_shift( $result );
     }
 
     // Obtener Registro
     public static function get($limit) {
-        $query = "SELECT * FROM " . static::$table . " LIMIT ${limit}";
+        $query = "SELECT * FROM " . static::$table . " LIMIT {$limit}";
         $result = self::querySQL($query);
         return array_shift( $result ) ;
     }
 
     // Busqueda Where con Columna 
     public static function where($column, $value) {
-        $query = "SELECT * FROM " . static::$table . " WHERE ${column} = '${value}' ";
+        $query = "SELECT * FROM " . static::$table . " WHERE {$column} = '{$value}' ";
         $result = self::querySQL($query);
         return array_shift( $result ) ;
     }
 
     // searh all records that belong to an id
     public static function belongsTo($column, $value) {
-        $query = "SELECT * FROM " . static::$table . " WHERE ${column} = '${value}' ";
+        $query = "SELECT * FROM " . static::$table . " WHERE {$column} = '{$value}' ";
         $result = self::querySQL($query);
         return $result;
     }

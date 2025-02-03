@@ -50,8 +50,10 @@ class TaskController {
             $response = [
                 'type' => 'success',
                 'id' => $result['id'],
-                'message' => 'Tarea creada correctamente'
+                'message' => 'Tarea creada correctamente',
+                'projectId' => $project->id
             ];
+            
             echo json_encode($response);
             
         }
@@ -59,7 +61,36 @@ class TaskController {
 
     public static function update() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
+
+            session_start();
+            isAuth();
+
+            $projectId = $_POST['url'];
+
+            $project = Project::where('url', $projectId);
+
+            if(!$project || $project->ownerId !== $_SESSION['id']) {
+                $response = [
+                    'type' => 'error',
+                    'message' => 'Error al actualizar la tarea'
+                ];
+                echo json_encode($response);
+                return;
+            } 
+
+            $task = new Task($_POST);
+            $task->projectId = $project->id;
+
+            $result = $task->save();
+            if($result) {
+                $response = [
+                    'type' => 'success',
+                    'id' => $task->id,
+                    'projectId' => $project->id,
+                    'message' => 'Actualizado correctamente'
+                ];
+                echo json_encode(['response' => $response]);
+            } 
         }
     }
 
