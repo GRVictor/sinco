@@ -7,6 +7,14 @@ class User extends ActiveRecord {
     protected static $columns = ['id', 'name', 'email', 'password', 'token', 'confirmed'];
     protected static $alerts = ['error' => [], 'success' => []];
 
+    public $id;
+    public $name;
+    public $email;
+    public $password;
+    public $confirm;
+    public $token;
+    public $confirmed;
+
     public function __construct($args = []) {
         $this -> id = $args['id'] ?? null;
         $this -> name = $args['name'] ?? '';
