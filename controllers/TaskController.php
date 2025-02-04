@@ -96,7 +96,32 @@ class TaskController {
 
     public static function delete() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
+                session_start();
+                isAuth();
+
+                $projectId = $_POST['url'];
+
+                $project = Project::where('url', $projectId);
+
+                if(!$project || $project->ownerId !== $_SESSION['id']) {
+                    $response = [
+                        'type' => 'error',
+                        'message' => 'Error al actualizar la tarea'
+                    ];
+                    echo json_encode($response);
+                    return;
+                } 
+
+                $task = new Task($_POST);
+                $result = $task->delete();
+
+                $result = [
+                    'result' => $result,
+                    'message' => 'Tarea eliminada correctamente',
+                    'type' => 'success'
+                ];
+
+                echo json_encode($result);
         }
     }
 

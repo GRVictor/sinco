@@ -67,6 +67,9 @@
             DeleteTaskBtn.classList.add('delete-task');
             DeleteTaskBtn.dataset.taskId = task.id;
             DeleteTaskBtn.textContent = 'Eliminar';
+            DeleteTaskBtn.ondblclick = function() { 
+                confirmDeleteTask({...task});
+             };
 
             divOptions.appendChild(StatusTaskBtn);
             divOptions.appendChild(DeleteTaskBtn);
@@ -128,7 +131,6 @@
 
     function submitFormNewTask() {
         const task = document.querySelector('#task').value.trim();
-        console.log(task);
         if (task === '') {
             // Show error message
             showAlert('El nombre de la tarea es obligatorio', 'error', document.querySelector('.form legend'));
@@ -174,7 +176,6 @@
             });
 
             const result = await response.json();
-            console.log(result);
             showAlert(result.message, result.type, document.querySelector('.form legend'));
 
             if(result.type === 'success') {
@@ -184,12 +185,17 @@
                 }, 1200);
 
                 // Add object to the global array of tasks
-                const taskObj = {
+                const taskObj = result.task ? {
                     id: String(result.task.id),
                     name: task,
                     status: 0,
                     projectId: result.task.projectId
-                }
+                } : {
+                    id: '',
+                    name: task,
+                    status: 0,
+                    projectId: ''
+                };
 
                 tasks = [...tasks, taskObj];
                 showTasks();
@@ -239,6 +245,60 @@
                     } 
                     return taskMemory;
                 });
+                showTasks();
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+    
+    function confirmDeleteTask(task) {
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: "Este cambio no se puede revertir",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#CFD2B2",
+            cancelButtonColor: "#BF0603",
+            confirmButtonText: "Si, eliminar",
+            cancelButtonText: "Cancelar"
+          }).then((result) => {
+            if (result.isConfirmed) {
+                deleteTask(task);
+            }
+          });
+    }
+
+    async function deleteTask(task) {
+
+        const {id, name, status} = task;
+        const data = new FormData();
+        data.append('id', id);
+        data.append('name', name);
+        data.append('status', status);
+        data.append('url', getProject());
+
+        try {
+            const url = 'http://localhost:3000/api/tasks/delete';
+            const response = await fetch(url, {
+                method: 'POST',
+                body: data
+            });
+
+            const result = await response.json();
+
+            if(result.result) {
+                // showAlert(result.message, result.type, document.querySelector('.container-new-task'));
+
+                Swal.fire(
+                    'Tarea eliminada',
+                    result.message,
+                    'success'
+                );
+                
+                tasks = tasks.filter(taskMemory => taskMemory.id !== id);
                 showTasks();
             }
 

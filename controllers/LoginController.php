@@ -53,7 +53,6 @@ class LoginController {
             'title' => 'Iniciar Sesión',
             'alerts' => $alerts
         ]);
-
     }
 
     public static function logout() {
