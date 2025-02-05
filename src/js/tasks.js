@@ -1,11 +1,35 @@
 (function() {
+    
     getTasks();
-
     let tasks = [];
+    let filtered = [];
 
     // Button to show modal form for adding a new task
     const addTaskButton = document.querySelector('#add-task');
-    addTaskButton.addEventListener('click', showForm);
+    
+    addTaskButton.addEventListener('click', function() {
+        showForm();
+    });
+
+    // Search filters
+    const filters = document.querySelectorAll('.filter input[type="radio"]');
+    filters.forEach(radio => {
+        radio.addEventListener('input', filterTasks);
+    });
+
+    function filterTasks(e) {
+        
+        const filters = e.target.value;
+
+        if(filters !== '') {
+            filtered = tasks.filter(task => task.status === filters);
+        } else {
+            filtered = [];
+        }
+
+        showTasks();
+
+    }
 
     async function getTasks() {
         try {
@@ -23,10 +47,14 @@
     }
 
     function showTasks() {
-        // Clear the previous tasks
         clearTasks();
+        totalPendingTasks();
+        totalCompletedTasks();
+
+        const arrayTasks = filtered.length ? filtered : tasks;
+
         // Text if there are no tasks
-        if(tasks.length === 0) {
+        if(arrayTasks.length === 0) {
             const tasksContainer = document.querySelector('#task-list');
             const noTaskText = document.createElement('LI');
             noTaskText.textContent = 'No hay tareas en este proyecto';
@@ -41,13 +69,16 @@
             1: 'Completada'
         };
 
-        tasks.forEach(task => {
+        arrayTasks.forEach(task => {
             const tasksContainer = document.createElement('LI');
             tasksContainer.dataset.taskId = task.id;
             tasksContainer.classList.add('task');
 
             const taskName = document.createElement('P');
             taskName.textContent = task.name;
+            taskName.ondblclick = function() {
+                showForm(edit = true, {...task});
+            }
 
             const divOptions = document.createElement('DIV');
             divOptions.classList.add('options');
@@ -84,15 +115,38 @@
 
     }
 
-    function showForm() {
+    function totalPendingTasks() {
+        const totalPending = tasks.filter(task => task.status === "0").length;
+        const pendingRadio = document.querySelector('#pending'); 
+
+        if(totalPending === 0) {
+            pendingRadio.disabled = true;
+        } else {
+            pendingRadio.disabled = false;
+        }
+            
+    }
+
+    function totalCompletedTasks() {
+        const totalCompleted = tasks.filter(task => task.status === "1").length;
+        const completedRadio = document.querySelector('#completed');
+
+        if(totalCompleted === 0) {
+            completedRadio.disabled = true;
+        } else {
+            completedRadio.disabled = false;
+        }
+    }
+
+    function showForm(edit = false, task = {}) {
         const modal = document.createElement('DIV');
         modal.classList.add('modal');
         modal.innerHTML = `
             <form class="form new-task">
-                <legend>Agregar una tarea</legend>
+                <legend>${edit ? 'Editar tarea' : 'Añade una nueva tarea'}</legend>
                 <div class="field">
                     <label for="task">Nombre de la tarea</label>
-                    <input type="text" id="task" name="task" placeholder="Ingresa el nombre de la tarea"/>
+                    <input type="text" id="task" name="task" value="${task.name ? task.name : ''}" placeholder="${task.name ? "Editar tarea" : 'Ingresa el nombre de la tarea'}"/>
                 </div>
 
                 <div class="options">
@@ -120,26 +174,24 @@
             } 
             
             if (e.target.classList.contains('submit-new-task')) {
-                submitFormNewTask();
+                const nameTask = document.querySelector('#task').value.trim();
+                if (nameTask === '') {
+                    // Show error message
+                    showAlert('El nombre de la tarea es obligatorio', 'error', document.querySelector('.form legend'));
+                    return;
+                }
+
+                if (edit) {
+                    task.name = nameTask;
+                    updateTask(task)
+                } else {
+                    addTask(nameTask);
+                } 
+
             }
-
-
         });
 
         document.querySelector('.dashboard').appendChild(modal);
-    }
-
-    function submitFormNewTask() {
-        const task = document.querySelector('#task').value.trim();
-        if (task === '') {
-            // Show error message
-            showAlert('El nombre de la tarea es obligatorio', 'error', document.querySelector('.form legend'));
-            return;
-        }
-
-        // Add task to the database
-        addTask(task);
-
     }
 
     function showAlert(message, type, reference) {
@@ -162,7 +214,7 @@
     }
 
     // Query to add a new task
-    async function addTask(task) {
+    async function  addTask(task) {
         // Construct the request
         const data = new FormData();
         data.append('name', task);
@@ -185,17 +237,12 @@
                 }, 1200);
 
                 // Add object to the global array of tasks
-                const taskObj = result.task ? {
-                    id: String(result.task.id),
+                const taskObj = {
+                    id: String(result.id),
                     name: task,
-                    status: 0,
-                    projectId: result.task.projectId
-                } : {
-                    id: '',
-                    name: task,
-                    status: 0,
-                    projectId: ''
-                };
+                    status: "0",
+                    projectId: result.projectId
+                } 
 
                 tasks = [...tasks, taskObj];
                 showTasks();
@@ -208,7 +255,7 @@
     }
 
     function changeStatusTask(task) {
-        const newStatus = task.status === 1 ? 0 : 1;
+        const newStatus = task.status === "1" ? "0" : "1";
         task.status = newStatus;
         updateTask(task);
     }
@@ -216,6 +263,7 @@
     async function updateTask(task) {
 
         const {id, name, status, projectId} = task;
+
         const data = new FormData();
         data.append('id', id);
         data.append('name', name);
@@ -237,11 +285,23 @@
             const result = await response.json();
             
             if(result.response.type === 'success') {
-                showAlert(result.response.message, result.response.type, document.querySelector('.container-new-task'));
+                // showAlert(result.response.message, result.response.type, document.querySelector('.container-new-task'));
+
+                Swal.fire(
+                    result.response.message,
+                    result.response.message,
+                    'success'
+                );
+                const modal = document.querySelector('.modal');
+                if(modal) {
+                    modal.remove();
+                }
 
                 tasks = tasks.map(taskMemory => {
                     if(taskMemory.id === id) {
                         taskMemory.status = status;
+                        taskMemory.name = name;
+
                     } 
                     return taskMemory;
                 });
