@@ -40,4 +40,27 @@
 
     }
 
+    small {
+        a {
+            display: block;
+            text-align: center;
+            color: v.$primary_color;
+            text-decoration: none;
+            margin-top: 2rem;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .back {
+        font-size: 1.8rem;
+        color: v.$primary_color;
+        text-decoration: none;
+        margin-top: 2rem;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
 }

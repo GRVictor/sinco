@@ -1,0 +1,36 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;; 
+
+@media (prefers-color-scheme: dark) {
+    $dark-body: #161a29;
+    $dark-line: #476e8b;
+    
+    body {
+        background-color: $dark-body;
+    }
+
+    .tagline,
+    .form label {
+        color: v.$light_grey;
+    }
+
+    .form input[type="text"],
+    .form input[type="email"],
+    .form input[type="password"] {
+        background-color: $dark-body !important;
+        border: 3px solid $dark-line !important;
+
+        &::placeholder {
+            color: v.$light_grey;
+        }
+
+        &:focus {
+            border-color: v.$primary_color;
+        }
+    }
+
+    .page-description {
+        color: v.$light_grey;
+    }
+
+}

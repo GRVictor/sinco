@@ -3,7 +3,7 @@
 
 .mobile-bar {
     background-color: v.$primary_color;
-    padding: 2rem 4rem;
+    padding: 2rem 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -13,8 +13,11 @@
     }
 
     h1 {
-        color: v.$white;
         margin: 0;
+        a {
+            color: v.$white;
+            text-decoration: none;
+        }
     }
 
     .menu {

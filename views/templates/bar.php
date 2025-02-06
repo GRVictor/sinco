@@ -1,5 +1,5 @@
 <div class="mobile-bar">
-    <h1>SINCO</h1>
+    <h1><a href="/dashboard">SINCO</a></h1>
 
     <div class="menu">
         <img id="mobile-menu" src="build/img/menu.svg" alt="imagen menu">
