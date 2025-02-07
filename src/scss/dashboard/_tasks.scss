@@ -60,6 +60,7 @@
             }
 
         }
+
         .completada{
             background-color: v.$success_color;
             color: v.$white;
@@ -69,14 +70,16 @@
             }
 
         }
+
         .pendiente{
-            background-color: v.$septenary_color; 
+            background-color: v.$dark_secondary_color; 
             color: v.$white;
 
             &:hover{
-                background-color: color.adjust(v.$septenary_color, $lightness: -10%);
+                background-color: color.adjust(v.$dark_secondary_color, $lightness: -10%);
             }
         }
+
         .delete-task{
             background-color: v.$alert_color;
             color: v.$white;

@@ -1,36 +1,146 @@
 @use 'base/variables' as v;
-@use 'base/mixins' as m;; 
+@use 'base/mixins' as m;
+@use 'sass:color'; 
 
 @media (prefers-color-scheme: dark) {
-    $dark-body: #161a29;
-    $dark-line: #476e8b;
-    
+    $dark-body: #2c2c3b;
+    $dark-line: #3a3a4b;
     body {
         background-color: $dark-body;
     }
 
     .tagline,
     .form label {
+        color: v.$white;
+    }
+
+    .page-description,
+    .page-name {
         color: v.$light_grey;
     }
 
-    .form input[type="text"],
-    .form input[type="email"],
-    .form input[type="password"] {
-        background-color: $dark-body !important;
-        border: 3px solid $dark-line !important;
+    .form .field input {
+        color: v.$light_grey;
 
         &::placeholder {
             color: v.$light_grey;
         }
-
         &:focus {
-            border-color: v.$primary_color;
+            border-color: v.$white;
+            outline: none;
         }
     }
 
-    .page-description {
+    .dashboard .form input:not([type=submit]) {
+        background-color: $dark-body;
+        border: 3px solid color.adjust(v.$black, $lightness: 50%);
+        &:focus {
+            border-color: v.$white;
+            outline: none;
+        }
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active{
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: v.$light_grey;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    .home .actions a {
+        color: color.adjust(v.$primary_color, $lightness: 20%);
+    }
+
+    .form .field input {
+        background-color: $dark-body;
+    }
+
+    .forgot small {
         color: v.$light_grey;
     }
+
+    .bar {
+        background-color: $dark-body;
+    }
+    
+    .sidebar {
+        @include m.tablet {
+            background-color: color.adjust($dark-body, $lightness: -7%);
+        }
+        .sidebar-nav a {
+            &.active {
+                background-color: v.$septenary_color;
+            }
+            &:hover {
+                background-color: color.adjust(v.$septenary_color, $lightness: 5%);
+            }
+        }
+    }
+
+    .bar p {
+        color: v.$light_grey;
+        span {
+            color: v.$septenary_color;
+        }
+        
+    }
+
+    .bar .logout {
+        @include m.button(v.$septenary_color, v.$white);
+        padding: 1rem 2rem;
+    }
+
+    .container-new-task .add-task {
+        @include m.button(v.$septenary_color, v.$white);
+    }
+
+    .mobile-bar {
+        background-color: color.adjust($dark-body, $lightness: -7%); 
+    }
+
+    .filter {
+        background-color: color.adjust($dark-body, $lightness: 10%);
+        label {
+            color: v.$light_grey;
+        }
+
+        .field input[type=radio]:checked {
+            background-color: v.$septenary_color;
+            border-color: v.$light_grey;
+        }
+    }
+
+    .task p {
+        color: v.$light_grey;
+    }
+
+    .dashboard {
+        background-color: $dark-body;
+        small {
+            a {
+                color: v.$light_grey;
+            }
+        }
+        .back {
+            color: v.$light_grey;
+        }
+    }
+
+    .project-list .project {
+        background-color: color.adjust($dark-body, $lightness: 10%);
+        &:hover {
+            background-color: color.adjust($dark-body, $lightness: 15%);
+        }
+    }
+
+    .modal .form {
+        background-color: color.adjust($dark-body, $lightness: 10%);
+        legend {
+            color: v.$light_grey;
+        }
+    }
+    
 
 }

@@ -58,6 +58,10 @@
             }
         }
 
+        @include m.tablet {
+            justify-content: center;
+        }
+
         .close-menu {
             display: flex;
             justify-content: center;
