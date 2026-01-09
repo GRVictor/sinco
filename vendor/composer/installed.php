@@ -3,7 +3,7 @@
         'name' => 'victorg/sinco',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'd24ceec80dc4b1cd81a966409203ac4df82f7e00',
+        'reference' => 'e135e106485f1337ec11eb0afc978cbeb080bd2b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'victorg/sinco' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd24ceec80dc4b1cd81a966409203ac4df82f7e00',
+            'reference' => 'e135e106485f1337ec11eb0afc978cbeb080bd2b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

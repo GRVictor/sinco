@@ -1,6 +1,11 @@
 <?php
 
-$db = mysqli_connect('localhost', 'root', '', 'sinco');
+$db = mysqli_connect(
+    $_ENV['BD_HOST'],
+    $_ENV['BD_USER'],
+    $_ENV['DB_PASS'],
+    $_ENV['DB_NAME']
+    );
 
 if (!$db) {
     echo "Error: No se pudo conectar a MySQL.";

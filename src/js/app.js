@@ -27,3 +27,17 @@ window.addEventListener('resize', function() {
             sidebar.classList.remove('show');
         }
 });
+
+s
+
+async function requestAPI() {
+    try {
+        const url = 'https://api.example.com/data';
+        const response = await fetch(url);
+        const services = await response.json();
+        showServices(services);
+
+    } catch (error) {
+        console.log(error);
+    }
+}
